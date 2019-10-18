@@ -29,14 +29,18 @@
 {
     NSPasteboard *pboard = [sender draggingPasteboard];
     BOOL successful = NO;
-
+    
     if ([[pboard types] containsObject: NSPasteboardTypeFileURL])
     {
-        NSArray *files = [pboard propertyListForType: NSPasteboardTypeFileURL];
-        [controller startConversion: [files objectAtIndex: 0]];
-        successful = NO;
+        if (pboard.pasteboardItems.count <= 1) {
+            NSURL *url = [NSURL URLFromPasteboard:pboard];
+            if (url) {
+                NSLog(@"url.path %@", url.path);
+                [controller startConversion: url.path];
+                successful = YES;
+            }
+        }
     }
-
     return successful;
 }
 
